@@ -1,7 +1,40 @@
 # Dataverse data model — solution "Stakeholders"
 
-Environment `hackathon2-team2`, solution `Stakeholders` 1.0.0.0 (publisher prefix `new_`).
-Read from the live environment on 2026-09-25.
+Environment `hackathon2-team2`, solution `Stakeholders` (publisher prefix `new_`).
+
+## Target model (agreed 2026-09-25)
+
+```mermaid
+erDiagram
+    account ||--o{ contact : "parentcustomerid"
+    account ||--o{ new_project : "new_account (required)"
+    new_project ||--o{ new_stakeholders : "project"
+    contact ||--o{ new_stakeholders : "contact"
+    new_stakeholders ||--o{ annotation : "report notes"
+```
+
+| Table | One row per | Holds |
+|---|---|---|
+| `account` (OOB) | customer | company data |
+| `contact` (OOB) | person | identity only: name, job title, account, email — no profile content |
+| `new_project` | project | name, account, dates, status |
+| `new_stakeholders` — display name "Project Stakeholder" | person × project | contact, project, role in project, quadrant, engagement risk, confidence, report date, latest report HTML (for the canvas app) |
+| `annotation` (Notes) | report run | dated HTML report attachment; history, never overwritten |
+
+Front end: a Power Apps canvas app opened in Microsoft Teams by the PM. The report is
+displayed with the HTML text control, so reports use inline styles only.
+The model-driven app stays in the solution for now.
+
+### Still to do in Dataverse
+
+- `new_stakeholders`: add contact lookup, role in project, report HTML column;
+  "Not assessable" for quadrant (optional), Medium for confidence.
+- Remove from `new_stakeholders`: text copies `new_account`, `new_projectname`,
+  person-level text columns, duplicate `new_risklevel` (portal — connector cannot delete).
+- Retire the custom profile columns on `contact` (`new_avoid`, `new_risk_level`, …).
+- Delete `new_opportunitycontact` and the four old cloud flows (portal).
+
+## Current model (read 2026-09-25, before the rework)
 
 ```mermaid
 erDiagram

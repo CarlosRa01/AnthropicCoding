@@ -28,10 +28,16 @@ guess.
 
 Collect from these sources, in order of preference:
 
-1. **Dataverse / Dynamics 365 connector** (if connected): look up the contact and
-   related project records — role, account, project history, activities (emails,
-   meetings, phone calls), notes. Use `list_tables`/`describe_table` first if the
-   schema is unknown; environments differ.
+1. **Dataverse / Dynamics 365 connector** (if connected) — see "Data model" below:
+   - Find the **contact** (the person) by name and account; read job title,
+     account (`parentcustomerid`) and activities (emails, meetings, phone calls)
+     regarding the contact.
+   - Find the **project** (`new_project`) and its account.
+   - Find the person's **Project Stakeholder** rows on *other* projects. If one has
+     a report note, read the newest one: it is a starting point, not a source.
+     Re-verify every fact you carry over and cite its original source; drop
+     anything you cannot re-cite.
+   Use `describe` on a table before querying it; column names may have changed.
 2. **What the user provides**: pasted notes, meeting impressions, a CV or bio the
    stakeholder shared themselves, org charts.
 3. **Public, professional information** via web search. Work through these source
@@ -158,24 +164,38 @@ Data sources: [list every source used, with URL where available] · Created: [da
 AI-generated decision support — to be validated by the PM
 ```
 
-Save the report as a styled single-file HTML profile named
+Save the report as a single-file HTML profile named
 `Stakeholder-Profile_[LastName]_[YYYY-MM-DD].html` (markdown or docx only on request).
-Layout — light card-based design (cream background #f6f5f2, white cards, 14px radius,
-soft pastel chips; green=strength, blue=skill, amber=caution, red=avoid), stacked
-sections in this order:
 
-1. **Hero card**: circular avatar (initials by default; photo if
-   `Stakeholder-Photo_[LastName].jpg` exists next to the file — <img> with onerror
-   fallback); name; role · org · location; a data-confidence pill (High/Medium/Low
-   based on source coverage); a row of 4 stat chips using only confirmed facts (omit
-   a chip if the fact is not sourced).
+The report is shown to PMs inside a **Power Apps canvas app in Microsoft Teams**,
+through the canvas **HTML text** control, and archived as a note attachment. That
+control renders only a subset of HTML/CSS, so the same file must work in both places:
+
+- **Inline styles only**: every style goes in a `style="…"` attribute. No `<style>`
+  block, no classes, no `<script>`, no external fonts, stylesheets or images.
+- **Tables for layout**: use `<table>` for side-by-side cards, chip rows and grids.
+  Do not rely on CSS grid, flexbox, `position`, or media queries.
+- **Web-safe fonts**: `font-family: 'Segoe UI', Arial, sans-serif` (Segoe UI is the
+  Teams font).
+- **No photos**: the avatar is a circle with the person's initials. Do not embed or
+  link photos in stored reports (data minimisation, wrong-person risk).
+- Keep the whole file under about 100 KB.
+
+Look — light card-based design: page background #f6f5f2, white cards with 14px radius
+and a 1px #e4e1da border, soft pastel chips (green = strength, blue = skill,
+amber = caution, red = avoid). Sections stacked in this order:
+
+1. **Hero card**: initials avatar; name; role · org · location; a data-confidence
+   pill (High/Medium/Low based on source coverage); a row of up to 4 stat chips using
+   only confirmed facts (omit a chip if the fact is not sourced).
 2. **Sources Confirmed + Career Timeline** (two cards side by side): bullet list of
    every source actually used with URL where available; for sources that found
    nothing, list them as "searched — no results". Timeline table of confirmed career
    stations only — each row must cite its source.
 3. **Technical Expertise & Skills card**: show only skills with direct source
-   evidence. Each skill bar must cite its source inline. If no skills are evidenced,
-   replace this card with a "Skills — No source-backed information found" notice.
+   evidence. Each skill bar (a filled table cell whose width is the rating × 20%) must
+   cite its source inline. If no skills are evidenced, replace this card with a
+   "Skills — No source-backed information found" notice.
 4. **Company Context + Risk Assessment** (two cards): facts table on the stakeholder's
    organization (cite each fact); risk card with overall-risk pill only if evidenced,
    short narrative citing sources, ✓-chips for confirmed strengths, ⚠-chips for
@@ -188,21 +208,46 @@ sections in this order:
    to actively fill information gaps (e.g., "Verify tenure via internal HR" or
    "Ask directly about project history").
 7. Footer: all data sources with URLs, creation date, "AI-generated decision support
-   — to be validated by the PM", GDPR Art. 15 note. Print CSS; no external
-   dependencies.
+   — to be validated by the PM", GDPR Art. 15 note.
 
-Photo rule: never source photos from LinkedIn/XING or other profile pages, and never
-auto-download from image search — wrong-person risk plus GDPR/copyright weight.
-After delivering the report, offer the PM a verification link
-(`https://www.google.com/search?tbm=isch&q="[Full Name]"+[Organization]`) so they can
-confirm identity and supply a photo they're entitled to use (own CRM, company team
-page with permission, or from the person directly).
+## Step 4: Store in Dataverse
 
-## Step 4: Store (optional)
+### Data model
 
-If Dataverse is connected and the user wants the profile persisted, write it to the
-stakeholder profile table (ask which table on first use, then remember it for the
-session). Include the report date so profiles are versioned, not overwritten.
+```
+Account ─1:N─► Contact (OOB — the person)
+   └─1:N─► Project (new_project) ─1:N─► Project Stakeholder (new_stakeholders) ◄─N:1─ Contact
+                                             └─ Notes (annotation): one dated HTML report per run
+```
+
+- **Contact** is the person: identity only (name, job title, account, email). Never
+  write profile content (assessments, do/avoid, warnings) onto the contact.
+- **Project Stakeholder** (logical name `new_stakeholders`) is one row per person per
+  project. It holds the structured, filterable fields the canvas app lists and sorts
+  by: contact, project, role in project, matrix quadrant, engagement risk,
+  confidence, report date, and the latest report HTML (multiline text) for display.
+- **Notes** attached to the Project Stakeholder row hold the report history: one
+  note per research run, never overwritten.
+
+### How to store
+
+Only store when the user asks to. Before the first write in a session, confirm the
+contact, the project, and that the PM wants the profile persisted.
+
+1. **Contact**: use the existing contact. If none exists, propose creating one
+   (name, job title, account only) and wait for the PM's confirmation.
+2. **Project Stakeholder**: look for a row with this contact and this project. Update
+   it if it exists; otherwise create it. Set the structured fields from the report.
+   If the quadrant or risk is "Not assessable", leave the column empty — never pick a
+   value to satisfy a required column; if the write fails for that reason, tell the
+   PM instead of guessing. Put the full report HTML into the latest-report column.
+3. **Note**: always create a new note on the Project Stakeholder row:
+   subject `Stakeholder Profile – [Full Name] – [YYYY-MM-DD]`, filename
+   `Stakeholder-Profile_[LastName]_[YYYY-MM-DD].html`, mimetype `text/html`, and the
+   HTML base64-encoded as the document body.
+
+Run `describe` on `new_stakeholders` and `annotation` before writing; use the logical
+column names it returns and numeric values for choice columns.
 
 ## Guardrails
 
