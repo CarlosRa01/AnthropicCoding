@@ -7,6 +7,11 @@
 - Display names are readable: capital letters allowed, multiple words separated by
   spaces ("Role in Project", "Confidence Level"). Never leave a display name in its
   schema-name form ("roleinproject").
+- Choice columns ALWAYS use a global choice (choice column synced to a global
+  choice). Never create a local choice. The global choice follows the same naming
+  rule (e.g. `new_roleinproject`, display "Role in Project"). The connector can only
+  create local choices, so creating a choice column is a portal step for the user:
+  first the global choice, then the column synced to it.
 - Caution: `update_table` with `updatable: true` on a choice column can overwrite the
   column's display name with the name passed in. Check display names afterwards.
 - Known exceptions that cannot be changed (system-generated): the primary name column
