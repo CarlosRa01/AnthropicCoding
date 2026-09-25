@@ -25,27 +25,31 @@ Front end: a Power Apps canvas app opened in Microsoft Teams by the PM. The repo
 displayed with the HTML text control, so reports use inline styles only.
 The model-driven app stays in the solution for now.
 
-### Project Stakeholder columns (target)
+### Project Stakeholder columns (verified 2026-09-25)
 
-| Column | Type | Status |
-|---|---|---|
-| `new_name` | Text, primary | exists |
-| `new_contact` | Lookup → contact | recreated 2026-09-25, required |
-| `new_projectlookup` | Lookup → new_project | exists, required |
-| `new_roleinproject` | Choice: Decision Maker, Sponsor, Influencer, End User, Blocker, Project Team Member | added 2026-09-25 |
-| `new_quadrant` | Global choice, optional | "Not assessable" added |
-| `new_engagementrisk` | Global choice | add "Not assessable" (portal) |
-| `new_confidencelevel` | Choice: High, Medium, Low | Medium added 2026-09-25 |
-| `new_reportdate` | Date only | exists |
-| `new_reporthtml` | Multiline text, 1,048,576 | added 2026-09-25 |
+| Schema name | Display name | Type | Required |
+|---|---|---|---|
+| `new_Name` | Name | Text, primary (system-generated schema name) | Yes |
+| `new_contact` | Contact | Lookup → contact | Yes |
+| `new_projectlookup` | Project | Lookup → new_project | Yes |
+| `new_roleinproject` | Role in Project | Choice → global `new_roleinproject`: Decision Maker, Sponsor, Influencer, End User, Blocker, Project Team Member | No |
+| `new_quadrant` | Quadrant | Choice → global `new_quadrant`: Manage Closely, Keep Satisfied, Keep Informed, Monitor, Not assessable | No |
+| `new_engagementrisk` | Engagement Risk | Choice → global `new_engagementrisk`: Low, Medium, High, Not assessable | No |
+| `new_confidencelevel` | Confidence Level | Choice → global `new_confidencelevel`: High, Medium, Low | No |
+| `new_reportdate` | Report Date | Date only | No |
+| `new_reporthtml` | Report HTML | Multiline text, 1,048,576 | No |
 
-All other custom columns on `new_stakeholders` are to be deleted in the portal (their
-content lives in the HTML report, on contact, or on the project).
+Global choices in the solution: `new_roleinproject`, `new_quadrant`, `new_engagementrisk`,
+`new_confidencelevel`, and `new_company_type` (pending decision; violates naming rule).
 
 ### Still to do in Dataverse
 
-- Retire the custom profile columns on `contact` (`new_avoid`, `new_risk_level`, …).
-- Delete `new_opportunitycontact` and the four old cloud flows (portal).
+- Delete `new_account`, `new_projectname`, `new_role`, `new_isteammember` on
+  `new_stakeholders` once the Power Pages site "Stakeholder Intelligence Portal" is
+  deleted (its form step depends on them); then delete the "Stakeholder Intake" form.
+- Decide on `account.new_company_type` and global choice `new_company_type`, plus
+  `account.new_ownership_structure`, `account.new_balance_sheet`, `contact.new_ownership_stake`.
+- Delete `new_opportunitycontact` (portal).
 
 ## Current model (read 2026-09-25, before the rework)
 
