@@ -30,10 +30,10 @@ The model-driven app stays in the solution for now.
 | Column | Type | Status |
 |---|---|---|
 | `new_name` | Text, primary | exists |
-| `new_contact` | Lookup → contact | added 2026-09-25 (make required in portal) |
-| `new_projectlookup` | Lookup → new_project | exists (make required in portal) |
+| `new_contact` | Lookup → contact | recreated 2026-09-25, required |
+| `new_projectlookup` | Lookup → new_project | exists, required |
 | `new_roleinproject` | Choice: Decision Maker, Sponsor, Influencer, End User, Blocker, Project Team Member | added 2026-09-25 |
-| `new_quadrant` | Global choice | add "Not assessable", make optional (portal) |
+| `new_quadrant` | Global choice, optional | "Not assessable" added |
 | `new_engagementrisk` | Global choice | add "Not assessable" (portal) |
 | `new_confidencelevel` | Choice: High, Medium, Low | Medium added 2026-09-25 |
 | `new_reportdate` | Date only | exists |
