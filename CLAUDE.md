@@ -4,7 +4,13 @@
 - Publisher prefix: `new_` (solution "Stakeholders", environment hackathon2-team2).
 - Schema names of new tables and columns: all lowercase, no underscore between words
   — e.g. `new_roleinproject`, not `new_role_in_project` or `new_RoleInProject`.
-- Display names are free: normal casing and spaces ("Role in Project").
+- Display names are readable: capital letters allowed, multiple words separated by
+  spaces ("Role in Project", "Confidence Level"). Never leave a display name in its
+  schema-name form ("roleinproject").
+- Caution: `update_table` with `updatable: true` on a choice column can overwrite the
+  column's display name with the name passed in. Check display names afterwards.
+- Known exceptions that cannot be changed (system-generated): the primary name column
+  `new_Name` and primary key `new_stakeholdersId` on `new_stakeholders`.
 - The connector derives the schema name from the display name, so create the column
   with the display name written as the schema name (e.g. `roleinproject`), then ask
   the user to set the readable display name in the maker portal.
