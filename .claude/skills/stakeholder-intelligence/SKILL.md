@@ -239,12 +239,12 @@ contact, the project, and that the PM wants the profile persisted.
 2. **Project Stakeholder**: look for a row with this contact and this project. Update
    it if it exists; otherwise create it. Set the structured fields from the report.
    Columns: `new_name` ("[Full Name] – [Project]"), `new_contact`,
-   `new_projectlookup`, `new_role_in_project`, `new_quadrant`, `new_engagementrisk`,
-   `new_confidencelevel` (High/Medium/Low), `new_reportdate`, `new_report_html`.
+   `new_projectlookup`, `new_roleinproject`, `new_quadrant`, `new_engagementrisk`,
+   `new_confidencelevel` (High/Medium/Low), `new_reportdate`, `new_reporthtml`.
    If the quadrant or risk is not assessable, use the "Not assessable" option if the
    column has one, otherwise leave it empty — never pick a value to satisfy a
    required column; if the write fails for that reason, tell the PM instead of
-   guessing. Put the full report HTML into `new_report_html`.
+   guessing. Put the full report HTML into `new_reporthtml`.
 3. **Note**: always create a new note on the Project Stakeholder row:
    subject `Stakeholder Profile – [Full Name] – [YYYY-MM-DD]`, filename
    `Stakeholder-Profile_[LastName]_[YYYY-MM-DD].html`, mimetype `text/html`, and the
