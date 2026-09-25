@@ -25,12 +25,25 @@ Front end: a Power Apps canvas app opened in Microsoft Teams by the PM. The repo
 displayed with the HTML text control, so reports use inline styles only.
 The model-driven app stays in the solution for now.
 
+### Project Stakeholder columns (target)
+
+| Column | Type | Status |
+|---|---|---|
+| `new_name` | Text, primary | exists |
+| `new_contact` | Lookup → contact | added 2026-09-25 (make required in portal) |
+| `new_projectlookup` | Lookup → new_project | exists (make required in portal) |
+| `new_role_in_project` | Choice: Decision Maker, Sponsor, Influencer, End User, Blocker, Project Team Member | added 2026-09-25 |
+| `new_quadrant` | Global choice | add "Not assessable", make optional (portal) |
+| `new_engagementrisk` | Global choice | add "Not assessable" (portal) |
+| `new_confidencelevel` | Choice: High, Medium, Low | Medium added 2026-09-25 |
+| `new_reportdate` | Date only | exists |
+| `new_report_html` | Multiline text, 1,048,576 | added 2026-09-25 |
+
+All other custom columns on `new_stakeholders` are to be deleted in the portal (their
+content lives in the HTML report, on contact, or on the project).
+
 ### Still to do in Dataverse
 
-- `new_stakeholders`: add contact lookup, role in project, report HTML column;
-  "Not assessable" for quadrant (optional), Medium for confidence.
-- Remove from `new_stakeholders`: text copies `new_account`, `new_projectname`,
-  person-level text columns, duplicate `new_risklevel` (portal — connector cannot delete).
 - Retire the custom profile columns on `contact` (`new_avoid`, `new_risk_level`, …).
 - Delete `new_opportunitycontact` and the four old cloud flows (portal).
 
