@@ -50,8 +50,11 @@ model-driven app are deleted. Solution = account, contact, new_project,
 new_stakeholders, 4 global choices, Anthropic connection reference.
 
 Open:
-- Confirm `new_roleinproject` / `new_confidencelevel` are synced to their global choices (portal).
-- Security role restricting Project Stakeholder and its notes to PMs.
+- Security role restricting Project Stakeholder and its notes to PMs — deferred until
+  the MVP is ready (see CLAUDE.md "Before go-live").
+
+Confirmed by the user: `new_roleinproject` and `new_confidencelevel` are synced to
+their global choices.
 - `new_project.new_description` is limited to 100 characters.
 
 ## Current model (read 2026-09-25, before the rework)

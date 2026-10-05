@@ -24,3 +24,9 @@
 
 ## Data model
 See `docs/data-model.md`. The skill lives in `.claude/skills/stakeholder-intelligence/`.
+
+## Before go-live (after the MVP) — do not forget
+- **Security role for PMs**: restrict Project Stakeholder (`new_stakeholders`) and its
+  notes (report history) to PMs before real profiles are stored. Agreed 2026-10-05 to
+  do this once the MVP is ready. Raise it when MVP work is wrapping up.
+- Licensing: pilot PMs need Power Apps Premium (or trial/per-app) for the canvas app.
