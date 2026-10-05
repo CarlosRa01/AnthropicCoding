@@ -91,6 +91,12 @@ confirmed escalation paths. Base interest on how directly the project affects th
 stated goals (from sources). If neither influence nor interest can be confirmed from
 sources, state this explicitly instead of classifying.
 
+**Role in project**: Decision Maker, Sponsor, Influencer, End User, Blocker, or
+Project Team Member. Take it from the PM or from a source that names the person's
+role in this project (a project charter, an org chart, a meeting invitation). A job
+title is not evidence for a project role; if the PM has not said it and no source
+shows it, ask the PM.
+
 **Strengths and support needs**: include only behaviors or capabilities with direct
 source evidence (e.g., a PM observation, a quoted interview statement, a confirmed
 project outcome). Frame these as observable, project-relevant behaviors — never
@@ -215,19 +221,39 @@ amber = caution, red = avoid). Sections stacked in this order:
 ### Data model
 
 ```
-Account ─1:N─► Contact (OOB — the person)
-   └─1:N─► Project (new_project) ─1:N─► Project Stakeholder (new_stakeholders) ◄─N:1─ Contact
-                                             └─ Notes (annotation): one dated HTML report per run
+Account ─1:N─► Contact (OOB — the person, parentcustomerid → account)
+   └─1:N─► Project (new_project, new_account → account)
+              └─1:N─► Project Stakeholder (new_stakeholders) ◄─N:1─ Contact
+                         └─ Notes (annotation): one dated HTML report per run
 ```
 
 - **Contact** is the person: identity only (name, job title, account, email). Never
   write profile content (assessments, do/avoid, warnings) onto the contact.
-- **Project Stakeholder** (logical name `new_stakeholders`) is one row per person per
-  project. It holds the structured, filterable fields the canvas app lists and sorts
-  by: contact, project, role in project, matrix quadrant, engagement risk,
-  confidence, report date, and the latest report HTML (multiline text) for display.
+- **Project** (`new_project`): project name `new_name`, account `new_account`,
+  `new_description`, `new_startdate`.
+- **Project Stakeholder** (`new_stakeholders`) is one row per person per project. It
+  holds only the structured fields the Teams canvas app lists, filters and sorts by,
+  plus the latest report for display.
 - **Notes** attached to the Project Stakeholder row hold the report history: one
-  note per research run, never overwritten.
+  note per research run, never overwritten or deleted by the agent.
+
+Project Stakeholder columns:
+
+| Column | Type | Value |
+|---|---|---|
+| `new_name` | Text, required | "[Full Name] – [Project Name]" |
+| `new_contact` | Lookup → contact, required | the person |
+| `new_projectlookup` | Lookup → new_project, required | the project |
+| `new_roleinproject` | Choice | Decision Maker 100000000 · Sponsor 100000001 · Influencer 100000002 · End User 100000003 · Blocker 100000004 · Project Team Member 100000005 |
+| `new_quadrant` | Choice | Manage Closely 100000000 · Keep Satisfied 100000001 · Keep Informed 100000002 · Monitor 100000003 · Not assessable 100000004 |
+| `new_engagementrisk` | Choice | Low 100000000 · Medium 100000001 · High 100000002 · Not assessable 100000003 |
+| `new_confidencelevel` | Choice | High 100000000 · Medium 100000001 · Low 100000002 (the report's data-confidence pill) |
+| `new_reportdate` | Date only | date of this research run |
+| `new_reporthtml` | Multiline text | the full report HTML of the latest run |
+
+The option values above were current on 2026-10-05. Run `describe` on
+`new_stakeholders` and `annotation` before writing and use the values it returns if
+they differ.
 
 ### How to store
 
@@ -235,23 +261,22 @@ Only store when the user asks to. Before the first write in a session, confirm t
 contact, the project, and that the PM wants the profile persisted.
 
 1. **Contact**: use the existing contact. If none exists, propose creating one
-   (name, job title, account only) and wait for the PM's confirmation.
-2. **Project Stakeholder**: look for a row with this contact and this project. Update
-   it if it exists; otherwise create it. Set the structured fields from the report.
-   Columns: `new_name` ("[Full Name] – [Project]"), `new_contact`,
-   `new_projectlookup`, `new_roleinproject`, `new_quadrant`, `new_engagementrisk`,
-   `new_confidencelevel` (High/Medium/Low), `new_reportdate`, `new_reporthtml`.
-   If the quadrant or risk is not assessable, use the "Not assessable" option if the
-   column has one, otherwise leave it empty — never pick a value to satisfy a
-   required column; if the write fails for that reason, tell the PM instead of
-   guessing. Put the full report HTML into `new_reporthtml`.
-3. **Note**: always create a new note on the Project Stakeholder row:
-   subject `Stakeholder Profile – [Full Name] – [YYYY-MM-DD]`, filename
+   (first name, last name, job title, account only) and wait for the PM's
+   confirmation.
+2. **Project**: use the existing project. If none exists, ask the PM; do not create
+   projects on your own.
+3. **Project Stakeholder**: look for a row with this contact and this project. Update
+   it if it exists; otherwise create it. Set every column in the table above. When
+   the quadrant or engagement risk is not assessable, set "Not assessable" — never
+   pick a real value to fill the column. Leave `new_roleinproject` empty if the role
+   is unknown.
+4. **Note**: always create a new note on the Project Stakeholder row (`objectid` →
+   the row): subject `Stakeholder Profile – [Full Name] – [YYYY-MM-DD]`, filename
    `Stakeholder-Profile_[LastName]_[YYYY-MM-DD].html`, mimetype `text/html`, and the
-   HTML base64-encoded as the document body.
+   HTML base64-encoded as `documentbody`.
 
-Run `describe` on `new_stakeholders` and `annotation` before writing; use the logical
-column names it returns and numeric values for choice columns.
+Report back which rows were created or updated, with their names, so the PM can find
+them in the app.
 
 ## Guardrails
 

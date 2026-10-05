@@ -42,20 +42,17 @@ The model-driven app stays in the solution for now.
 Global choices in the solution: `new_roleinproject`, `new_quadrant`, `new_engagementrisk`,
 `new_confidencelevel`, and `new_company_type` (pending decision; violates naming rule).
 
-### Status check 2026-10-05
+### Status check 2026-10-05 (second pass)
 
-Done: old Project Stakeholder columns, "Stakeholder Intake" form, Power Pages site,
-old cloud flows, contact profile columns, global choices `risk_level`,
-`confidence_level` and `company_type` (with `account.new_company_type`) are deleted.
-The model-driven app "Stakeholder Intelligence" is no longer in the environment.
+Clean: all custom columns follow the naming rules; `new_opportunitycontact`,
+`new_project.new_projectname`, account custom columns, the old canvas app and the
+model-driven app are deleted. Solution = account, contact, new_project,
+new_stakeholders, 4 global choices, Anthropic connection reference.
 
 Open:
-- `account.new_balance_sheet`, `account.new_ownership_structure`: underscore names — keep or delete.
-- `new_opportunitycontact` ("Opportunity Stakeholder"): delete.
-- `new_project.new_projectname`: required text duplicating the primary name `new_name` — delete.
 - Confirm `new_roleinproject` / `new_confidencelevel` are synced to their global choices (portal).
-- Old canvas app `new_stakeholderintelligence_d04b8` targets the old schema — rebuild or delete.
 - Security role restricting Project Stakeholder and its notes to PMs.
+- `new_project.new_description` is limited to 100 characters.
 
 ## Current model (read 2026-09-25, before the rework)
 
