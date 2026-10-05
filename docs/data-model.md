@@ -55,7 +55,7 @@ Open:
 
 Confirmed by the user: `new_roleinproject` and `new_confidencelevel` are synced to
 their global choices.
-- `new_project.new_description` is limited to 100 characters.
+- `new_project` status reason "Oh Hold" is misspelled (should be "On Hold").
 
 ## Current model (read 2026-09-25, before the rework)
 
