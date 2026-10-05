@@ -14,8 +14,9 @@
   first the global choice, then the column synced to it.
 - Caution: `update_table` with `updatable: true` on a choice column can overwrite the
   column's display name with the name passed in. Check display names afterwards.
-- Known exceptions that cannot be changed (system-generated): the primary name column
-  `new_Name` and primary key `new_stakeholdersId` on `new_stakeholders`.
+- Known exceptions that cannot be changed (system-generated): the primary name
+  columns `new_Name` and primary keys (`new_stakeholdersId`, `new_projectId`) on
+  `new_stakeholders` and `new_project`.
 - The connector derives the schema name from the display name, so create the column
   with the display name written as the schema name (e.g. `roleinproject`), then ask
   the user to set the readable display name in the maker portal.

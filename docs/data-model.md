@@ -42,20 +42,16 @@ The model-driven app stays in the solution for now.
 Global choices in the solution: `new_roleinproject`, `new_quadrant`, `new_engagementrisk`,
 `new_confidencelevel`, and `new_company_type` (pending decision; violates naming rule).
 
-### Status check 2026-10-05 (second pass)
+### Final check 2026-10-05 — data model complete
 
-Clean: all custom columns follow the naming rules; `new_opportunitycontact`,
-`new_project.new_projectname`, account custom columns, the old canvas app and the
-model-driven app are deleted. Solution = account, contact, new_project,
-new_stakeholders, 4 global choices, Anthropic connection reference.
+Solution: account, contact, `new_project`, `new_stakeholders`; global choices
+Role in Project, Confidence Level, Quadrant, Engagement Risk (choice columns confirmed
+synced); Anthropic connection reference. No other custom columns on account/contact.
 
-Open:
-- Security role restricting Project Stakeholder and its notes to PMs — deferred until
-  the MVP is ready (see CLAUDE.md "Before go-live").
+`new_project`: `new_Name` "Project Name", `new_account` (required), `new_description`
+(1000), `new_startdate`; status reason Active, Inactive, On Hold, Completed.
 
-Confirmed by the user: `new_roleinproject` and `new_confidencelevel` are synced to
-their global choices.
-- `new_project` status reason "Oh Hold" is misspelled (should be "On Hold").
+Deferred to go-live: PM security role (see CLAUDE.md).
 
 ## Current model (read 2026-09-25, before the rework)
 
