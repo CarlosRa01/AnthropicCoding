@@ -31,3 +31,18 @@ See `docs/data-model.md`. The skill lives in `.claude/skills/stakeholder-intelli
   notes (report history) to PMs before real profiles are stored. Agreed 2026-10-05 to
   do this once the MVP is ready. Raise it when MVP work is wrapping up.
 - Licensing: pilot PMs need Power Apps Premium (or trial/per-app) for the canvas app.
+
+## Dataverse skills (Microsoft, vendored)
+- `.claude/skills/dv-*` and `scripts/auth.py` are copied from microsoft/Dataverse-skills
+  (see THIRD_PARTY_NOTICES.md). The `/plugin` installer is not available in cloud
+  sessions, so the skills live in this repo as project skills.
+- This is a headless cloud host: use the Python SDK path (`scripts/auth.py`), not the
+  `dataverse`/`pac` CLIs or local MCP. If the Dataverse connector tools (`mcp__Dataverse__*`)
+  are present, prefer them for reads, `describe` and small writes.
+- `scripts/auth.py` reads these variables from the process environment or `.env`
+  (never commit `.env`): `DATAVERSE_URL`, `TENANT_ID`, and for non-interactive sign-in
+  `CLIENT_ID` + `CLIENT_SECRET` (the "Claude Dataverse MCP" app, which has an application
+  user with System Administrator in hackathon2-team2). Set them in the cloud environment
+  settings; the secret is visible to anyone who can use that environment.
+- Install once per session: `pip install azure-identity requests PowerPlatform-Dataverse-Client pandas msal msal-extensions`.
+- Naming rules above still apply to everything created through these skills.
